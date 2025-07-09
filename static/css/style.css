@@ -1,0 +1,348 @@
+/* Mutech Civil HRM System Custom Styles */
+
+:root {
+    --primary-color: #1e3a8a;
+    --secondary-color: #3b82f6;
+    --accent-color: #f59e0b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-color: #1f2937;
+    --light-color: #f8fafc;
+    --border-color: #e5e7eb;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-color);
+    color: #374151;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: white;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    border: none;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+/* Dashboard Stats Cards */
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+}
+
+.stats-card .icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.stats-card .icon.primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.stats-card .icon.success {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+}
+
+.stats-card .icon.warning {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+}
+
+.stats-card .icon.danger {
+    background: linear-gradient(135deg, var(--danger-color), #dc2626);
+}
+
+.stats-card h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.stats-card p {
+    color: #6b7280;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+/* Tables */
+.table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.table tbody td {
+    padding: 1rem;
+    border-color: var(--border-color);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+}
+
+/* Status badges */
+.status-active {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-inactive {
+    background-color: #6b7280;
+    color: white;
+}
+
+.status-pending {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.status-approved {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-rejected {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Sidebar for admin pages */
+.sidebar {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    height: fit-content;
+}
+
+.sidebar .nav-link {
+    color: #374151;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+/* Department specific colors */
+.dept-procurement {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.dept-accounts {
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+}
+
+.dept-spare {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+.dept-engineering {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+.dept-rentals {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+}
+
+.dept-financial {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.dept-sales {
+    background: linear-gradient(135deg, #be185d, #ec4899);
+}
+
+.dept-purchase {
+    background: linear-gradient(135deg, #7c2d12, #ea580c);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        border-radius: 12px;
+    }
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .sidebar, .btn, .alert {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}

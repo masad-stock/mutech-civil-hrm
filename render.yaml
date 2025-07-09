@@ -1,0 +1,54 @@
+services:
+  # Web service
+  - type: web
+    name: mutech-hrm
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python init_db.py
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mutech-hrm-db
+          property: connectionString
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_DEFAULT_SENDER
+        sync: false
+      - key: MPESA_CONSUMER_KEY
+        sync: false
+      - key: MPESA_CONSUMER_SECRET
+        sync: false
+      - key: MPESA_SHORTCODE
+        sync: false
+      - key: MPESA_PASSKEY
+        sync: false
+      - key: MPESA_ENVIRONMENT
+        value: sandbox
+      - key: ADMIN_EMAIL
+        value: admin@mutechcivil.com
+      - key: ADMIN_PASSWORD
+        value: admin123
+      - key: ADMIN_FIRST_NAME
+        value: System
+      - key: ADMIN_LAST_NAME
+        value: Administrator
+      - key: BASE_URL
+        value: https://mutech-hrm.onrender.com
+
+  # Database
+databases:
+  - name: mutech-hrm-db
+    databaseName: mutech_hrm
+    user: mutech_user

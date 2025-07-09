@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block title %}Procurement Department - Mutech Civil HRM{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Department Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center">
+                                <div class="dept-procurement text-white rounded p-3 me-3">
+                                    <i class="fas fa-shopping-cart fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h2 class="mb-1">Procurement Department</h2>
+                                    <p class="text-muted mb-0">Purchasing, Supply Chain & Vendor Management</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-plus me-1"></i>New Request
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('departments.procurement_requests') }}">
+                                        <i class="fas fa-file-alt me-2"></i>Purchase Request
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#">
+                                        <i class="fas fa-truck me-2"></i>Vendor Quote
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#">
+                                        <i class="fas fa-handshake me-2"></i>Contract Request
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Stats -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon warning">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <h3>{{ pending_requests }}</h3>
+                <p>Pending Requests</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>{{ approved_requests }}</h3>
+                <p>Approved This Month</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon primary">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <h3>KES {{ "{:,.0f}".format(total_budget) }}</h3>
+                <p>Monthly Budget</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon danger">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>{{ dept_employees|length }}</h3>
+                <p>Team Members</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Purchase Requests -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt me-2"></i>Recent Purchase Requests
+                    </h5>
+                    <a href="{{ url_for('departments.procurement_requests') }}" class="btn btn-sm btn-outline-primary">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Item/Service</th>
+                                    <th>Requested By</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample data - replace with actual data -->
+                                <tr>
+                                    <td><strong>PR-2024-001</strong></td>
+                                    <td>Office Supplies</td>
+                                    <td>John Doe</td>
+                                    <td>KES 15,000</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td>Jan 15, 2024</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success" title="Approve">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PR-2024-002</strong></td>
+                                    <td>Equipment Maintenance</td>
+                                    <td>Jane Smith</td>
+                                    <td>KES 45,000</td>
+                                    <td><span class="badge bg-success">Approved</span></td>
+                                    <td>Jan 14, 2024</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info" title="Track">
+                                                <i class="fas fa-truck"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PR-2024-003</strong></td>
+                                    <td>Construction Materials</td>
+                                    <td>Mike Johnson</td>
+                                    <td>KES 120,000</td>
+                                    <td><span class="badge bg-info">In Review</span></td>
+                                    <td>Jan 13, 2024</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" title="Review">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Team -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Department Team
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if dept_employees %}
+                    <div class="list-group list-group-flush">
+                        {% for employee in dept_employees %}
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-3">
+                                    {{ employee.first_name[0] }}{{ employee.last_name[0] }}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">{{ employee.full_name }}</div>
+                                    <small class="text-muted">{{ employee.position }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge {{ 'bg-success' if employee.is_active else 'bg-secondary' }}">
+                                        {{ 'Active' if employee.is_active else 'Inactive' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No team members found</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Procurement Tools
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('departments.procurement_requests') }}" class="btn btn-outline-primary w-100 h-100">
+                                <i class="fas fa-file-alt d-block mb-2 fa-2x"></i>
+                                <div>Purchase Requests</div>
+                                <small class="text-muted">Create and manage requests</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="#" class="btn btn-outline-success w-100 h-100">
+                                <i class="fas fa-truck d-block mb-2 fa-2x"></i>
+                                <div>Vendor Management</div>
+                                <small class="text-muted">Manage supplier relationships</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="#" class="btn btn-outline-warning w-100 h-100">
+                                <i class="fas fa-chart-bar d-block mb-2 fa-2x"></i>
+                                <div>Budget Tracking</div>
+                                <small class="text-muted">Monitor spending and budgets</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="#" class="btn btn-outline-danger w-100 h-100">
+                                <i class="fas fa-file-contract d-block mb-2 fa-2x"></i>
+                                <div>Contracts</div>
+                                <small class="text-muted">Manage vendor contracts</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Performance -->
+    <div class="row mt-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-star me-2"></i>Top Vendors
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <!-- Sample vendor data -->
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">ABC Suppliers Ltd</div>
+                                    <small class="text-muted">Office Supplies & Equipment</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <small class="text-muted">4.2/5</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">XYZ Construction Materials</div>
+                                    <small class="text-muted">Building Materials</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <small class="text-muted">4.8/5</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Spending by Category
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="spendingChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Spending by Category Chart
+    const spendingCtx = document.getElementById('spendingChart');
+    if (spendingCtx) {
+        new Chart(spendingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Office Supplies', 'Equipment', 'Materials', 'Services', 'Other'],
+                datasets: [{
+                    data: [25, 30, 20, 15, 10],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

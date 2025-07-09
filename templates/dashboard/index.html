@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mutech Civil HRM{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-1">Welcome back, {{ current_user.first_name }}! 👋</h2>
+                            <p class="text-muted mb-0">
+                                {{ current_user.position }} - {{ current_user.department.name }}
+                                <span class="mx-2">|</span>
+                                Employee ID: {{ current_user.employee_id }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex gap-2 justify-content-md-end">
+                                {% if not today_attendance or not today_attendance.check_in %}
+                                <a href="{{ url_for('dashboard.clock_in') }}" class="btn btn-success" id="clockInBtn">
+                                    <i class="fas fa-clock me-1"></i>Clock In
+                                </a>
+                                {% elif not today_attendance.check_out %}
+                                <a href="{{ url_for('dashboard.clock_out') }}" class="btn btn-warning" id="clockOutBtn">
+                                    <i class="fas fa-clock me-1"></i>Clock Out
+                                </a>
+                                {% else %}
+                                <span class="badge bg-success fs-6">
+                                    <i class="fas fa-check me-1"></i>Day Complete
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon primary">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>{{ "%.1f"|format(total_hours) }}</h3>
+                <p>Hours This Month</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon success">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h3>{{ leave_balance.annual }}</h3>
+                <p>Annual Leave Days</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon warning">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3>{{ leave_balance.sick }}</h3>
+                <p>Sick Leave Days</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card">
+                <div class="icon danger">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <h3>{{ pending_leaves|length }}</h3>
+                <p>Pending Requests</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Today's Status -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-day me-2"></i>Today's Status
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if today_attendance %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Check In:</span>
+                            <span class="fw-bold">
+                                {% if today_attendance.check_in %}
+                                    {{ today_attendance.check_in.strftime('%H:%M') }}
+                                {% else %}
+                                    Not clocked in
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Check Out:</span>
+                            <span class="fw-bold">
+                                {% if today_attendance.check_out %}
+                                    {{ today_attendance.check_out.strftime('%H:%M') }}
+                                {% else %}
+                                    Not clocked out
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Status:</span>
+                            <span class="badge 
+                                {% if today_attendance.status == 'present' %}bg-success
+                                {% elif today_attendance.status == 'late' %}bg-warning
+                                {% else %}bg-danger{% endif %}">
+                                {{ today_attendance.status.title() }}
+                            </span>
+                        </div>
+                        {% if today_attendance.check_in and today_attendance.check_out %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Hours Worked:</span>
+                            <span class="fw-bold">{{ "%.1f"|format(today_attendance.hours_worked) }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No attendance record for today</p>
+                        <a href="{{ url_for('dashboard.clock_in') }}" class="btn btn-primary">
+                            <i class="fas fa-clock me-1"></i>Clock In Now
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Attendance -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Attendance
+                    </h5>
+                    <a href="{{ url_for('dashboard.attendance') }}" class="btn btn-sm btn-outline-primary">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_attendance %}
+                    <div class="list-group list-group-flush">
+                        {% for attendance in recent_attendance %}
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">{{ attendance.date.strftime('%b %d, %Y') }}</div>
+                                    <small class="text-muted">
+                                        {% if attendance.check_in %}
+                                            {{ attendance.check_in.strftime('%H:%M') }}
+                                            {% if attendance.check_out %}
+                                                - {{ attendance.check_out.strftime('%H:%M') }}
+                                            {% endif %}
+                                        {% else %}
+                                            No record
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <span class="badge 
+                                    {% if attendance.status == 'present' %}bg-success
+                                    {% elif attendance.status == 'late' %}bg-warning
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ attendance.status.title() }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">No attendance records yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Leave Requests -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>Leave Requests
+                    </h5>
+                    <a href="{{ url_for('dashboard.request_leave') }}" class="btn btn-sm btn-outline-primary">
+                        New Request
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if pending_leaves %}
+                    <div class="list-group list-group-flush">
+                        {% for leave in pending_leaves %}
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="fw-bold">{{ leave.leave_type.title() }} Leave</div>
+                                    <small class="text-muted">
+                                        {{ leave.start_date.strftime('%b %d') }} - {{ leave.end_date.strftime('%b %d, %Y') }}
+                                        ({{ leave.days_requested }} days)
+                                    </small>
+                                </div>
+                                <span class="badge bg-warning">{{ leave.status.title() }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-check fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-2">No pending leave requests</p>
+                        <a href="{{ url_for('dashboard.request_leave') }}" class="btn btn-sm btn-primary">
+                            Request Leave
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('dashboard.profile') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user-edit d-block mb-2 fa-2x"></i>
+                                Update Profile
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('dashboard.attendance') }}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-clock d-block mb-2 fa-2x"></i>
+                                View Attendance
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('dashboard.leave_requests') }}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-calendar-alt d-block mb-2 fa-2x"></i>
+                                Leave History
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('auth.change_password') }}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-key d-block mb-2 fa-2x"></i>
+                                Change Password
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update time every second
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        const dateString = now.toLocaleDateString();
+        
+        // Update any time displays
+        const timeElements = document.querySelectorAll('.current-time');
+        timeElements.forEach(el => el.textContent = timeString);
+    }
+    
+    setInterval(updateTime, 1000);
+    updateTime(); // Initial call
+});
+</script>
+{% endblock %}
